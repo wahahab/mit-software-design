@@ -3,8 +3,10 @@
  */
 package twitter;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
+
 
 /**
  * Extract consists of methods that extract information from a list of tweets.
@@ -14,6 +16,12 @@ import java.util.Set;
  * private methods or classes if you like.
  */
 public class Extract {
+	
+	public static class EmptyTweetsException extends RuntimeException {
+		public EmptyTweetsException(String string) {
+			super(string);
+		}
+	}
 
     /**
      * Get the time period spanned by tweets.
@@ -22,9 +30,27 @@ public class Extract {
      *            list of tweets with distinct ids, not modified by this method.
      * @return a minimum-length time interval that contains the timestamp of
      *         every tweet in the list.
+     * @throws EmptyTweetsException 
      */
     public static Timespan getTimespan(List<Tweet> tweets) {
-        throw new RuntimeException("not implemented");
+    		Instant start = null;
+    		Instant end = null;
+    		Instant timestamp;
+    		
+    		if (tweets.size() == 0)
+    			throw new EmptyTweetsException("Empty tweets!");
+    		for (Tweet tweet : tweets) {
+    			timestamp = tweet.getTimestamp();
+    			if (start == null) {
+    				start = timestamp;
+    				end = timestamp;
+    			}
+    			else if (timestamp.isBefore(start))
+    				start = timestamp;
+    			else if (timestamp.isAfter(end))
+    				end = timestamp;
+    		}
+    		return new Timespan(start, end);
     }
 
     /**

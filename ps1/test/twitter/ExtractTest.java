@@ -6,10 +6,14 @@ package twitter;
 import static org.junit.Assert.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
+
+import twitter.Extract.EmptyTweetsException;
 
 public class ExtractTest {
 
@@ -43,6 +47,24 @@ public class ExtractTest {
         Set<String> mentionedUsers = Extract.getMentionedUsers(Arrays.asList(tweet1));
         
         assertTrue("expected empty set", mentionedUsers.isEmpty());
+    }
+    
+    @Test(expected = EmptyTweetsException.class)
+    public void testGetTimespanEmptyTweets() {
+    		// Empty tweets
+		Extract.getTimespan(new ArrayList<Tweet>());
+    }
+    @Test
+    public void testGetTimespan() {
+    		// test two tweets
+    		ArrayList<Tweet> tweets = new ArrayList<Tweet>();
+    		tweets.add(tweet1);
+    		tweets.add(tweet2);
+    		assertEquals(Extract.getTimespan(tweets),
+    				new Timespan(d1, d2));
+    		// test only one tweet
+    		tweets.remove(0);
+    		assertEquals(Extract.getTimespan(tweets), new Timespan(d2, d2));
     }
 
     /*
