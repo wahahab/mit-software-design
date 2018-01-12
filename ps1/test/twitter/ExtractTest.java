@@ -8,10 +8,15 @@ import static org.junit.Assert.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.naming.spi.DirStateFactory.Result;
+
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import twitter.Extract.EmptyTweetsException;
 
@@ -26,8 +31,17 @@ public class ExtractTest {
     private static final Instant d1 = Instant.parse("2016-02-17T10:00:00Z");
     private static final Instant d2 = Instant.parse("2016-02-17T11:00:00Z");
     
-    private static final Tweet tweet1 = new Tweet(1, "alyssa", "is it reasonable to talk about rivest so much?", d1);
-    private static final Tweet tweet2 = new Tweet(2, "bbitdiddle", "rivest talk in 30 minutes #hype", d2);
+    private static final Tweet tweet1 = new Tweet(1, "alyssa", "is it reasonable to talk about rivest so much @foobar ?", d1);
+    private static final Tweet tweet2 = new Tweet(2, "bbitdiddle", "rivest talk in 30 minutes #hype @bazzfooz ", d2);
+    private static final Tweet tweetNoMentioned = new Tweet(1, "alyssa", "is it reasonable to talk about rivest so much ?", d1);
+    private static final ArrayList<Tweet> tweets = new ArrayList<Tweet>();
+    
+    @Before
+    public void setUpTweets() {
+    		tweets.clear();
+    		tweets.add(tweet1);
+		tweets.add(tweet2);
+    }
     
     @Test(expected=AssertionError.class)
     public void testAssertionsEnabled() {
@@ -44,7 +58,8 @@ public class ExtractTest {
     
     @Test
     public void testGetMentionedUsersNoMention() {
-        Set<String> mentionedUsers = Extract.getMentionedUsers(Arrays.asList(tweet1));
+        Set<String> mentionedUsers = Extract.getMentionedUsers(
+        		Arrays.asList(tweetNoMentioned));
         
         assertTrue("expected empty set", mentionedUsers.isEmpty());
     }
@@ -57,14 +72,33 @@ public class ExtractTest {
     @Test
     public void testGetTimespan() {
     		// test two tweets
-    		ArrayList<Tweet> tweets = new ArrayList<Tweet>();
-    		tweets.add(tweet1);
-    		tweets.add(tweet2);
     		assertEquals(Extract.getTimespan(tweets),
     				new Timespan(d1, d2));
     		// test only one tweet
     		tweets.remove(0);
     		assertEquals(Extract.getTimespan(tweets), new Timespan(d2, d2));
+    }
+    @Test
+    public void testGetMentionedUsersEmptyTweets() {
+    		Set<String> result = Extract.getMentionedUsers(new ArrayList<Tweet>()); 
+    		assertTrue(result.isEmpty());
+    }
+    @Test
+    public void testGetMentionedUsers() {
+    		// regular tweets
+    		Set<String> result = Extract.getMentionedUsers(tweets);
+    		String expected[] = {
+    			"foobar",
+    			"bazzfooz"
+    		};
+    		assertEquals(result,
+    				new HashSet<String>(Arrays.asList(expected)));
+    		// repeat mentioned
+    		tweets.add(tweet1);
+    		result = Extract.getMentionedUsers(tweets);
+    		assertEquals(tweets.size(), 3);
+    		assertEquals(result,
+    				new HashSet<String>(Arrays.asList(expected)));
     }
 
     /*

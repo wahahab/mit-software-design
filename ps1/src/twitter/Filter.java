@@ -3,6 +3,9 @@
  */
 package twitter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -27,7 +30,13 @@ public class Filter {
      *         in the same order as in the input list.
      */
     public static List<Tweet> writtenBy(List<Tweet> tweets, String username) {
-        throw new RuntimeException("not implemented");
+        ArrayList<Tweet> filteredTweets = new ArrayList<Tweet>();
+        
+        for (Tweet tweet : tweets) {
+        		if(tweet.getAuthor() == username)
+        			filteredTweets.add(tweet);
+        }
+        return filteredTweets;
     }
 
     /**
@@ -41,7 +50,15 @@ public class Filter {
      *         in the same order as in the input list.
      */
     public static List<Tweet> inTimespan(List<Tweet> tweets, Timespan timespan) {
-        throw new RuntimeException("not implemented");
+        ArrayList<Tweet> filteredTweets = new ArrayList<Tweet>();
+        
+        for (Tweet tweet : tweets) {
+        		if (timespan.getStart().isBefore(tweet.getTimestamp())
+        				&& timespan.getEnd().isAfter(tweet.getTimestamp())) {
+        			filteredTweets.add(tweet);
+        		}
+        }
+        return filteredTweets;
     }
 
     /**
@@ -60,7 +77,20 @@ public class Filter {
      *         same order as in the input list.
      */
     public static List<Tweet> containing(List<Tweet> tweets, List<String> words) {
-        throw new RuntimeException("not implemented");
+        ArrayList<Tweet> result = new ArrayList<Tweet>();
+        HashSet<String> twitterWords;
+        
+        for (Tweet tweet : tweets) {
+        		twitterWords = new HashSet<String>(
+        			Arrays.asList(tweet.getText().split(" ")));
+        		for (String word : words) {
+        			if (twitterWords.contains(word)) {
+        				result.add(tweet);
+        				break;
+        			}
+        		}
+        }
+        return result;
     }
 
 }

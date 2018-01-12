@@ -4,8 +4,12 @@
 package twitter;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -18,6 +22,11 @@ import java.util.Set;
 public class Extract {
 	
 	public static class EmptyTweetsException extends RuntimeException {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		public EmptyTweetsException(String string) {
 			super(string);
 		}
@@ -52,6 +61,27 @@ public class Extract {
     		}
     		return new Timespan(start, end);
     }
+    
+    /**
+     * Extract username in text
+     * example usernames: @foobar @foo_bar @foo-rewe
+     * 
+     * @param text tweet text
+     * @return distinct usernames in text
+     */
+    private static HashSet<String> extractUserNames(String text) {
+    		String lower = text.toLowerCase();
+		Pattern pattern = Pattern.compile("@([a-z_-]+)\\b");
+		Matcher matcher = pattern.matcher(lower);
+//		System.out.printf("Text: %s\n", lower);
+		ArrayList<String> result = new ArrayList<String>();
+    		
+		while(matcher.find()) {
+//			System.out.printf("Match: %s\n", );
+			result.add(matcher.group(1));
+		}
+		return new HashSet<String>(result);
+    }
 
     /**
      * Get usernames mentioned in a list of tweets.
@@ -69,7 +99,12 @@ public class Extract {
      *         include a username at most once.
      */
     public static Set<String> getMentionedUsers(List<Tweet> tweets) {
-        throw new RuntimeException("not implemented");
+        HashSet<String> result = new HashSet<String>();
+        
+        for (Tweet tweet : tweets) {
+        		result.addAll(extractUserNames(tweet.getText()));
+        }
+        return result;
     }
 
 }

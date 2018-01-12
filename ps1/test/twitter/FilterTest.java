@@ -6,10 +6,17 @@ package twitter;
 import static org.junit.Assert.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.print.CancelablePrintJob;
+import javax.security.sasl.AuthorizeCallback;
+import javax.xml.soap.SAAJMetaFactory;
+
+import org.junit.Before;
 import org.junit.Test;
+import org.omg.IOP.MultipleComponentProfileHelper;
 
 public class FilterTest {
 
@@ -24,6 +31,88 @@ public class FilterTest {
     
     private static final Tweet tweet1 = new Tweet(1, "alyssa", "is it reasonable to talk about rivest so much?", d1);
     private static final Tweet tweet2 = new Tweet(2, "bbitdiddle", "rivest talk in 30 minutes #hype", d2);
+    private static final ArrayList<Tweet> tweets = new ArrayList<Tweet>();
+    
+    @Before
+    public void setUpTweets() {
+    		tweets.clear();
+    		tweets.add(tweet1);
+    		tweets.add(tweet2);
+    }
+    
+    @Test
+    public void testWrittenByEmpty() {
+    		List<Tweet> result = Filter.writtenBy(new ArrayList<Tweet>(), "foo");
+    		
+//    		empty tweets
+    		assertEquals(result.size(), 0);
+//    		can find tweet
+    		result = Filter.writtenBy(tweets, "alyssa");
+    		assertEquals(result.size(), 1);
+    		assertEquals(result.get(0).getAuthor(), "alyssa");
+//    		author name not in tweets
+    		result = Filter.writtenBy(tweets, "foobar");
+    		assertEquals(result.size(), 0);
+//    		multiple tweets written by same author
+    		tweets.add(tweet1);
+    		tweets.add(tweet1);
+    		result = Filter.writtenBy(tweets, "alyssa");
+    		assertEquals(result.size(), 3);
+    		for (Tweet tweet : result) {
+    			assertEquals(tweet.getAuthor(), "alyssa");
+    		}
+    }
+    
+    @Test
+    public void testInTimespan() {
+    		Timespan timespan = new Timespan(Instant.MIN, Instant.MAX);
+    		List<Tweet> result = Filter.inTimespan(new ArrayList<Tweet>(),
+    				timespan);
+    		
+//    		empty tweets
+    		assertEquals(result.size(), 0);
+//    		test large timespan
+    		result = Filter.inTimespan(tweets, timespan);
+    		assertEquals(result.size(), tweets.size());
+//    		test small timespan
+    		timespan = new Timespan(Instant.parse("2016-02-17T09:50:00Z"),
+    				Instant.parse("2016-02-17T10:10:00Z"));
+    		result = Filter.inTimespan(tweets, timespan);
+    		assertEquals(result.size(), 1);
+    		assertEquals(result.get(0).getId(), tweet1.getId());
+//    		test small timespan and cant find any match tweets
+    		timespan = new Timespan(Instant.parse("2016-02-16T09:50:00Z"),
+    				Instant.parse("2016-02-16T10:10:00Z"));
+    		result = Filter.inTimespan(tweets, timespan);
+    		assertEquals(result.size(), 0);
+    }
+   
+    @Test
+    public void testContainingMy() {
+    		String wordsArray[] = {
+            	"reasonable",
+        };
+    		ArrayList<String> words = new ArrayList<String>(
+    			Arrays.asList(wordsArray));
+    		// test empty tweets
+    		List<Tweet> result = Filter.containing(new ArrayList<Tweet>(),
+    				words);
+    		
+    		assertEquals(result.size(), 0);
+    		// find first tweet
+    		result = Filter.containing(tweets, words);
+    		assertEquals(result.size(), 1);
+    		assertEquals(result.get(0).getId(), tweet1.getId());
+    		// find both tweets
+    		words.clear();
+    		words.add("talk");
+    		result = Filter.containing(tweets, words);
+    		assertEquals(result.size(), tweets.size());
+    		// empty word list
+    		words.clear();
+    		result = Filter.containing(tweets, words);
+    		assertEquals(result.size(), 0);
+    }
     
     @Test(expected=AssertionError.class)
     public void testAssertionsEnabled() {
