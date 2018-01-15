@@ -63,21 +63,37 @@ public class Extract {
     }
     
     /**
+     * 
+     * Find all set of hashtags in given text
+     * 
+     * @param text Tweet text
+     * @return Set of hashtags (String)
+     */
+    public static Set<String> extractHashtags(String text) {
+		Pattern pattern = Pattern.compile("#([a-z_-]+)\\b");
+		Matcher matcher = pattern.matcher(text);
+		ArrayList<String> result = new ArrayList<String>();
+    		
+		while(matcher.find()) {
+			result.add(matcher.group(1));
+		}
+		return new HashSet<String>(result);
+    }
+    
+    /**
      * Extract username in text
      * example usernames: @foobar @foo_bar @foo-rewe
      * 
      * @param text tweet text
      * @return distinct usernames in text
      */
-    private static HashSet<String> extractUserNames(String text) {
+    public static HashSet<String> extractUserNames(String text) {
     		String lower = text.toLowerCase();
 		Pattern pattern = Pattern.compile("@([a-z_-]+)\\b");
 		Matcher matcher = pattern.matcher(lower);
-//		System.out.printf("Text: %s\n", lower);
 		ArrayList<String> result = new ArrayList<String>();
     		
 		while(matcher.find()) {
-//			System.out.printf("Match: %s\n", );
 			result.add(matcher.group(1));
 		}
 		return new HashSet<String>(result);
