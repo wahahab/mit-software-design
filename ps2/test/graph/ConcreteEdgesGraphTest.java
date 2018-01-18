@@ -16,12 +16,17 @@ import org.junit.Test;
  * Tests against the Graph spec should be in GraphInstanceTest.
  */
 public class ConcreteEdgesGraphTest extends GraphInstanceTest {
-    
+	
     /*
      * Provide a ConcreteEdgesGraph for tests in GraphInstanceTest.
      */
     @Override public Graph<String> emptyInstance() {
         return new ConcreteEdgesGraph();
+    }
+    
+    @Test
+    public void testToStringEmpty() {
+    		assertEquals(graph.toString(), "Vertices:\n\nEdges:\n\n");
     }
     
     /*

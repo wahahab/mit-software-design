@@ -29,8 +29,8 @@ public abstract class GraphInstanceTest {
      * @return a new empty graph of the particular implementation being tested
      */
     public abstract Graph<String> emptyInstance();
-    private static Graph<String> graph;
-    private static Graph<String> completeGraph;
+    protected static Graph<String> graph;
+    protected static Graph<String> completeGraph;
     
     @Before
     public void graphSetUp() {
@@ -172,16 +172,6 @@ public abstract class GraphInstanceTest {
     }
     @Test(expected=Graph.VertextNotExistException.class)
     public void testSetTargetSourceNotInGraph() {
-
-//      completeGraph.set("usa", "german", 10);
-//  	completeGraph.set("german", "franch", 1);
-//  	completeGraph.set("franch", "german", 1);
-//  	completeGraph.set("taiwan", "japan", 2);
-//  	completeGraph.set("japan", "taiwan", 2);
-//  	completeGraph.set("taiwan", "china", 3);
-//  	completeGraph.set("china", "taiwan", 2);
-//  	completeGraph.set("china", "german", 8);
-//  	completeGraph.set("german", "china", 7);
     		// both not in graph
 		completeGraph.set("foo", "bar", 100);
     }

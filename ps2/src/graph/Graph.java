@@ -19,12 +19,12 @@ import java.util.Set;
  */
 public interface Graph<L> {
 	
-	static class VertextNotExistException extends Exception {
+	static class VertextNotExistException extends RuntimeException {
 		public VertextNotExistException(String msg) {
 			super(msg);
 		}
 	}
-	static class NegativeWeightException extends Exception {
+	static class NegativeWeightException extends RuntimeException {
 		public NegativeWeightException(String msg) {
 			super(msg);
 		}
