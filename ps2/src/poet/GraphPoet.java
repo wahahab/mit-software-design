@@ -3,8 +3,14 @@
  */
 package poet;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
+
+import org.omg.CORBA.PRIVATE_MEMBER;
 
 import graph.Graph;
 
@@ -61,6 +67,15 @@ public class GraphPoet {
     // Safety from rep exposure:
     //   TODO
     
+    private int getPrevWeight(String source, String target) {
+    		Map<String, Integer> targets = graph.targets(source);
+    		
+    		if (targets.containsKey(target)) {
+    			return targets.get(target);
+    		}
+    		return 0;
+    }
+    
     /**
      * Create a new poet with the graph from corpus (as described above).
      * 
@@ -68,7 +83,56 @@ public class GraphPoet {
      * @throws IOException if the corpus file cannot be found or read
      */
     public GraphPoet(File corpus) throws IOException {
-        throw new RuntimeException("not implemented");
+        BufferedReader reader = new BufferedReader(
+        		new FileReader(corpus));
+        String line;
+        String words[];
+        String word;
+        String nextWord;
+        int prevWeight;
+        
+        while ((line = reader.readLine()) != null) {
+        		words = line.split(" ");
+        		for (int i = 0 ; i < words.length - 1 ; i++) {
+        			word = words[i].toLowerCase();
+        			nextWord = words[i + 1].toLowerCase();
+        			if (!graph.vertices().contains(word)) {
+        				graph.add(word);
+        			}
+        			if (!graph.vertices().contains(nextWord)) {
+        				graph.add(nextWord);
+        			}
+        			prevWeight = getPrevWeight(word, nextWord);
+        			graph.set(word, nextWord, prevWeight + 1);
+        		}
+        }
+        
+    }
+    
+    private Integer getWeight(String potentialBridge, String targetWord) {
+    		Map<String, Integer> targets = graph.targets(potentialBridge);
+    		if (targets.containsKey(targetWord)) {
+    			return targets.get(targetWord);
+    		}
+    		return 0;
+    }
+    
+    private String getBridgeWord(String word, String targetWord) {
+    		Map<String, Integer> potentialBridges = graph.targets(word.toLowerCase());
+    		Integer weight;
+    		Integer thisWeight;
+    		Integer maxWeight = 0;
+    		String maxBridge = "";
+    		
+    		for (String potentialBridge : potentialBridges.keySet()) {
+    			thisWeight = potentialBridges.get(potentialBridge);
+    			weight = getWeight(potentialBridge, targetWord.toLowerCase());
+    			if (weight != 0 && weight + thisWeight > maxWeight) {
+    				maxWeight = weight + thisWeight;
+    				maxBridge = potentialBridge;
+    			}
+    		}
+    		return maxBridge;
     }
     
     // TODO checkRep
@@ -80,9 +144,27 @@ public class GraphPoet {
      * @return poem (as described above)
      */
     public String poem(String input) {
-        throw new RuntimeException("not implemented");
+        String words[] = input.split(" ");
+        String word;
+        String nextWord;
+        String bridgeWord;
+        ArrayList<String> poemWords = new ArrayList<>();
+        
+        poemWords.add(words[0]);
+        for (int i = 0 ; i < words.length - 1 ; i++) {
+        		word = words[i];
+        		nextWord = words[i + 1];
+        		bridgeWord = getBridgeWord(word, nextWord);
+        		if (bridgeWord != "")
+        			poemWords.add(bridgeWord);
+        		poemWords.add(nextWord);
+        }
+        return String.join(" ", poemWords);
     }
     
-    // TODO toString()
+    @Override
+    public String toString() {
+    		return graph.toString();
+    }
     
 }
