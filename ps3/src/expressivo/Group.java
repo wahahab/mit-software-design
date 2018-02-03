@@ -1,6 +1,8 @@
 package expressivo;
 
 import java.awt.Container;
+import java.awt.ContainerOrderFocusTraversalPolicy;
+import java.util.Map;
 
 import org.hamcrest.core.IsInstanceOf;
 
@@ -33,5 +35,10 @@ public class Group implements Expression {
 	@Override
 	public Expression diffrentiate(String variable) {
 		return contain.diffrentiate(variable);
+	}
+
+	@Override
+	public Expression simplify(Map<String, Double> environment) {
+		return contain.simplify(environment);
 	}
 }

@@ -30,12 +30,14 @@ import Configuration;
  * how to use Antlr and has links to reference information.
  */
 root : expression EOF;
-expression : group
+expression : p1 ('+' expression)?;
+p1 : group | value | variable | p1 '*' p1;
+/*expression : group
 	| value
 	| variable
-	| expression '+' expression
 	| expression '*' expression
-	;
+	| expression '+' expression
+	;*/
 value : VALUE;
 variable : VARIABLE;
 VALUE : [0-9]+ ('.' [0-9]+)?;

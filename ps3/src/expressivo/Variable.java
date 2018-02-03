@@ -1,5 +1,7 @@
 package expressivo;
 
+import java.util.Map;
+
 public class Variable implements Expression {
 	String symbol;
 	
@@ -31,6 +33,16 @@ public class Variable implements Expression {
 	@Override
 	public Expression diffrentiate(String variable) {
 		return variable.equals(symbol) ? new Value(1) : new Value(0); 
+	}
+
+	@Override
+	public Expression simplify(Map<String, Double> environment) {
+		Double value = environment.get(symbol);
+		
+		if (value == null) {
+			return this;
+		}
+		return new Value(value);
 	}
 	
 }

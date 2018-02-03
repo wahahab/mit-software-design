@@ -1,5 +1,7 @@
 package expressivo;
 
+import java.util.Map;
+
 public class Value implements Expression {
 	double value;
 	
@@ -30,5 +32,10 @@ public class Value implements Expression {
 	@Override
 	public Expression diffrentiate(String variable) {
 		return new Value(0);
+	}
+
+	@Override
+	public Expression simplify(Map<String, Double> environment) {
+		return this;
 	}
 }

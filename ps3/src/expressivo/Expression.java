@@ -3,6 +3,7 @@
  */
 package expressivo;
 
+import java.util.Map;
 import java.util.Stack;
 
 import org.antlr.runtime.CharStream;
@@ -24,6 +25,7 @@ import expressivo.parser.ExpressionListener;
 import expressivo.parser.ExpressionParser;
 import expressivo.parser.ExpressionParser.ExpressionContext;
 import expressivo.parser.ExpressionParser.GroupContext;
+import expressivo.parser.ExpressionParser.P1Context;
 import expressivo.parser.ExpressionParser.RootContext;
 import expressivo.parser.ExpressionParser.ValueContext;
 import expressivo.parser.ExpressionParser.VariableContext;
@@ -67,6 +69,7 @@ public interface Expression {
         ExpressionListener listener = new ExpressionBuilder(
         		expressions);
         
+//        Trees.inspect(tree, parser);
         walker.walk(listener, tree);
         return expressions.pop();
     }
@@ -99,6 +102,12 @@ public interface Expression {
      * @return diffrentiated expression
      */
     public Expression diffrentiate(String variable);
+    
+    /**
+     * @param environment variables' value
+     * @return simplified expression
+     */
+    public Expression simplify(Map<String, Double> environment);
     
 }
 
@@ -164,19 +173,11 @@ class ExpressionBuilder implements ExpressionListener {
 	
 	@Override
 	public void exitExpression(ExpressionContext ctx) {
-		String symbol;
 		Expression right;
+		
 		if (ctx.getChildCount() >= 3) {
-			symbol = ctx.getChild(1).getText();
 			right = expressions.pop();
-			switch(symbol) {
-				case "*":
-					expressions.push(new Multiply(expressions.pop(), right));
-					break;
-				case "+":
-					expressions.push(new Sum(expressions.pop(), right));
-					break;
-			}
+			expressions.push(new Sum(expressions.pop(), right));
 		}
 	}
 
@@ -188,6 +189,27 @@ class ExpressionBuilder implements ExpressionListener {
 	@Override
 	public void exitVariable(VariableContext ctx) {
 		expressions.push(new Variable(ctx.VARIABLE().getText()));
+	}
+
+	@Override
+	public void enterP1(P1Context ctx) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void exitP1(P1Context ctx) {
+		String symbol;
+		Expression right;
+		if (ctx.getChildCount() >= 3) {
+			symbol = ctx.getChild(1).getText();
+			right = expressions.pop();
+			switch(symbol) {
+				case "*":
+					expressions.push(new Multiply(expressions.pop(), right));
+					return;
+			}
+		}
 	}
 	
 }

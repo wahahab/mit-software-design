@@ -22,10 +22,10 @@ public class ExpressionParser extends Parser {
   public static final int
     T__0=1, T__1=2, T__2=3, T__3=4, VALUE=5, VARIABLE=6, SPACES=7;
   public static final int
-    RULE_root = 0, RULE_expression = 1, RULE_value = 2, RULE_variable = 3, 
-    RULE_group = 4;
+    RULE_root = 0, RULE_expression = 1, RULE_p1 = 2, RULE_value = 3, RULE_variable = 4, 
+    RULE_group = 5;
   public static final String[] ruleNames = {
-    "root", "expression", "value", "variable", "group"
+    "root", "expression", "p1", "value", "variable", "group"
   };
 
   private static final String[] _LITERAL_NAMES = {
@@ -125,9 +125,9 @@ public class ExpressionParser extends Parser {
     try {
       enterOuterAlt(_localctx, 1);
       {
-      setState(10);
-      expression(0);
-      setState(11);
+      setState(12);
+      expression();
+      setState(13);
       match(EOF);
       }
     }
@@ -143,20 +143,11 @@ public class ExpressionParser extends Parser {
   }
 
   public static class ExpressionContext extends ParserRuleContext {
-    public GroupContext group() {
-      return getRuleContext(GroupContext.class,0);
+    public P1Context p1() {
+      return getRuleContext(P1Context.class,0);
     }
-    public ValueContext value() {
-      return getRuleContext(ValueContext.class,0);
-    }
-    public VariableContext variable() {
-      return getRuleContext(VariableContext.class,0);
-    }
-    public List<ExpressionContext> expression() {
-      return getRuleContexts(ExpressionContext.class);
-    }
-    public ExpressionContext expression(int i) {
-      return getRuleContext(ExpressionContext.class,i);
+    public ExpressionContext expression() {
+      return getRuleContext(ExpressionContext.class,0);
     }
     public ExpressionContext(ParserRuleContext parent, int invokingState) {
       super(parent, invokingState);
@@ -173,37 +164,100 @@ public class ExpressionParser extends Parser {
   }
 
   public final ExpressionContext expression() throws RecognitionException {
-    return expression(0);
+    ExpressionContext _localctx = new ExpressionContext(_ctx, getState());
+    enterRule(_localctx, 2, RULE_expression);
+    int _la;
+    try {
+      enterOuterAlt(_localctx, 1);
+      {
+      setState(15);
+      p1(0);
+      setState(18);
+      _la = _input.LA(1);
+      if (_la==T__0) {
+        {
+        setState(16);
+        match(T__0);
+        setState(17);
+        expression();
+        }
+      }
+
+      }
+    }
+    catch (RecognitionException re) {
+      _localctx.exception = re;
+      _errHandler.reportError(this, re);
+      _errHandler.recover(this, re);
+    }
+    finally {
+      exitRule();
+    }
+    return _localctx;
   }
 
-  private ExpressionContext expression(int _p) throws RecognitionException {
+  public static class P1Context extends ParserRuleContext {
+    public GroupContext group() {
+      return getRuleContext(GroupContext.class,0);
+    }
+    public ValueContext value() {
+      return getRuleContext(ValueContext.class,0);
+    }
+    public VariableContext variable() {
+      return getRuleContext(VariableContext.class,0);
+    }
+    public List<P1Context> p1() {
+      return getRuleContexts(P1Context.class);
+    }
+    public P1Context p1(int i) {
+      return getRuleContext(P1Context.class,i);
+    }
+    public P1Context(ParserRuleContext parent, int invokingState) {
+      super(parent, invokingState);
+    }
+    @Override public int getRuleIndex() { return RULE_p1; }
+    @Override
+    public void enterRule(ParseTreeListener listener) {
+      if ( listener instanceof ExpressionListener ) ((ExpressionListener)listener).enterP1(this);
+    }
+    @Override
+    public void exitRule(ParseTreeListener listener) {
+      if ( listener instanceof ExpressionListener ) ((ExpressionListener)listener).exitP1(this);
+    }
+  }
+
+  public final P1Context p1() throws RecognitionException {
+    return p1(0);
+  }
+
+  private P1Context p1(int _p) throws RecognitionException {
     ParserRuleContext _parentctx = _ctx;
     int _parentState = getState();
-    ExpressionContext _localctx = new ExpressionContext(_ctx, _parentState);
-    ExpressionContext _prevctx = _localctx;
-    int _startState = 2;
-    enterRecursionRule(_localctx, 2, RULE_expression, _p);
+    P1Context _localctx = new P1Context(_ctx, _parentState);
+    P1Context _prevctx = _localctx;
+    int _startState = 4;
+    enterRecursionRule(_localctx, 4, RULE_p1, _p);
     try {
       int _alt;
       enterOuterAlt(_localctx, 1);
       {
-      setState(17);
+      setState(24);
       switch (_input.LA(1)) {
       case T__2:
         {
-        setState(14);
+        setState(21);
         group();
         }
         break;
       case VALUE:
         {
-        setState(15);
+        setState(22);
         value();
         }
         break;
       case VARIABLE:
         {
-        setState(16);
+        setState(23);
         variable();
         }
         break;
@@ -211,7 +265,7 @@ public class ExpressionParser extends Parser {
         throw new NoViableAltException(this);
       }
       _ctx.stop = _input.LT(-1);
-      setState(27);
+      setState(31);
       _errHandler.sync(this);
       _alt = getInterpreter().adaptivePredict(_input,2,_ctx);
       while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -219,36 +273,19 @@ public class ExpressionParser extends Parser {
           if ( _parseListeners!=null ) triggerExitRuleEvent();
           _prevctx = _localctx;
           {
-          setState(25);
-          switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
-          case 1:
-            {
-            _localctx = new ExpressionContext(_parentctx, _parentState);
-            pushNewRecursionContext(_localctx, _startState, RULE_expression);
-            setState(19);
-            if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-            setState(20);
-            match(T__0);
-            setState(21);
-            expression(3);
-            }
-            break;
-          case 2:
-            {
-            _localctx = new ExpressionContext(_parentctx, _parentState);
-            pushNewRecursionContext(_localctx, _startState, RULE_expression);
-            setState(22);
-            if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-            setState(23);
-            match(T__1);
-            setState(24);
-            expression(2);
-            }
-            break;
+          {
+          _localctx = new P1Context(_parentctx, _parentState);
+          pushNewRecursionContext(_localctx, _startState, RULE_p1);
+          setState(26);
+          if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
+          setState(27);
+          match(T__1);
+          setState(28);
+          p1(2);
           }
           } 
         }
-        setState(29);
+        setState(33);
         _errHandler.sync(this);
         _alt = getInterpreter().adaptivePredict(_input,2,_ctx);
       }
@@ -283,11 +320,11 @@ public class ExpressionParser extends Parser {
 
   public final ValueContext value() throws RecognitionException {
     ValueContext _localctx = new ValueContext(_ctx, getState());
-    enterRule(_localctx, 4, RULE_value);
+    enterRule(_localctx, 6, RULE_value);
     try {
       enterOuterAlt(_localctx, 1);
       {
-      setState(30);
+      setState(34);
       match(VALUE);
       }
     }
@@ -320,11 +357,11 @@ public class ExpressionParser extends Parser {
 
   public final VariableContext variable() throws RecognitionException {
     VariableContext _localctx = new VariableContext(_ctx, getState());
-    enterRule(_localctx, 6, RULE_variable);
+    enterRule(_localctx, 8, RULE_variable);
     try {
       enterOuterAlt(_localctx, 1);
       {
-      setState(32);
+      setState(36);
       match(VARIABLE);
       }
     }
@@ -359,15 +396,15 @@ public class ExpressionParser extends Parser {
 
   public final GroupContext group() throws RecognitionException {
     GroupContext _localctx = new GroupContext(_ctx, getState());
-    enterRule(_localctx, 8, RULE_group);
+    enterRule(_localctx, 10, RULE_group);
     try {
       enterOuterAlt(_localctx, 1);
       {
-      setState(34);
+      setState(38);
       match(T__2);
-      setState(35);
-      expression(0);
-      setState(36);
+      setState(39);
+      expression();
+      setState(40);
       match(T__3);
       }
     }
@@ -384,34 +421,32 @@ public class ExpressionParser extends Parser {
 
   public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
     switch (ruleIndex) {
-    case 1:
-      return expression_sempred((ExpressionContext)_localctx, predIndex);
+    case 2:
+      return p1_sempred((P1Context)_localctx, predIndex);
     }
     return true;
   }
-  private boolean expression_sempred(ExpressionContext _localctx, int predIndex) {
+  private boolean p1_sempred(P1Context _localctx, int predIndex) {
     switch (predIndex) {
     case 0:
-      return precpred(_ctx, 2);
-    case 1:
       return precpred(_ctx, 1);
     }
     return true;
   }
 
   public static final String _serializedATN =
-    "\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\t)\4\2\t\2\4\3"+
-      "\t\3\4\4\t\4\4\5\t\5\4\6\t\6\3\2\3\2\3\2\3\3\3\3\3\3\3\3\5\3\24\n"+
-      "\3\3\3\3\3\3\3\3\3\3\3\3\3\7\3\34\n\3\f\3\16\3\37\13\3\3\4\3\4\3\5"+
-      "\3\5\3\6\3\6\3\6\3\6\3\6\2\3\4\7\2\4\6\b\n\2\2\'\2\f\3\2\2\2\4\23"+
-      "\3\2\2\2\6 \3\2\2\2\b\"\3\2\2\2\n$\3\2\2\2\f\r\5\4\3\2\r\16\7\2\2"+
-      "\3\16\3\3\2\2\2\17\20\b\3\1\2\20\24\5\n\6\2\21\24\5\6\4\2\22\24\5"+
-      "\b\5\2\23\17\3\2\2\2\23\21\3\2\2\2\23\22\3\2\2\2\24\35\3\2\2\2\25"+
-      "\26\f\4\2\2\26\27\7\3\2\2\27\34\5\4\3\5\30\31\f\3\2\2\31\32\7\4\2"+
-      "\2\32\34\5\4\3\4\33\25\3\2\2\2\33\30\3\2\2\2\34\37\3\2\2\2\35\33\3"+
-      "\2\2\2\35\36\3\2\2\2\36\5\3\2\2\2\37\35\3\2\2\2 !\7\7\2\2!\7\3\2\2"+
-      "\2\"#\7\b\2\2#\t\3\2\2\2$%\7\5\2\2%&\5\4\3\2&\'\7\6\2\2\'\13\3\2\2"+
-      "\2\5\23\33\35";
+    "\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\t-\4\2\t\2\4\3"+
+      "\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\3\2\3\2\3\2\3\3\3\3\3\3\5\3\25"+
+      "\n\3\3\4\3\4\3\4\3\4\5\4\33\n\4\3\4\3\4\3\4\7\4 \n\4\f\4\16\4#\13"+
+      "\4\3\5\3\5\3\6\3\6\3\7\3\7\3\7\3\7\3\7\2\3\6\b\2\4\6\b\n\f\2\2*\2"+
+      "\16\3\2\2\2\4\21\3\2\2\2\6\32\3\2\2\2\b$\3\2\2\2\n&\3\2\2\2\f(\3\2"+
+      "\2\2\16\17\5\4\3\2\17\20\7\2\2\3\20\3\3\2\2\2\21\24\5\6\4\2\22\23"+
+      "\7\3\2\2\23\25\5\4\3\2\24\22\3\2\2\2\24\25\3\2\2\2\25\5\3\2\2\2\26"+
+      "\27\b\4\1\2\27\33\5\f\7\2\30\33\5\b\5\2\31\33\5\n\6\2\32\26\3\2\2"+
+      "\2\32\30\3\2\2\2\32\31\3\2\2\2\33!\3\2\2\2\34\35\f\3\2\2\35\36\7\4"+
+      "\2\2\36 \5\6\4\4\37\34\3\2\2\2 #\3\2\2\2!\37\3\2\2\2!\"\3\2\2\2\""+
+      "\7\3\2\2\2#!\3\2\2\2$%\7\7\2\2%\t\3\2\2\2&\'\7\b\2\2\'\13\3\2\2\2"+
+      "()\7\5\2\2)*\5\4\3\2*+\7\6\2\2+\r\3\2\2\2\5\24\32!";
   public static final ATN _ATN =
     new ATNDeserializer().deserialize(_serializedATN.toCharArray());
   static {

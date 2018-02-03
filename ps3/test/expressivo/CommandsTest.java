@@ -5,6 +5,9 @@ package expressivo;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Test;
 
 /**
@@ -33,6 +36,25 @@ public class CommandsTest {
     		result = Commands.differentiate("3*x*y*x", "x");
     		assertEquals("3.0*x*y*(1.0) + x*(3.0*x*(0.0) + y*(3.0*(1.0) + x*(0.0)))", result);
     		result = Commands.differentiate("3.0*x*y*x", "x");
+    }
+    
+    @Test
+    public void testSimplify() {
+    		Map<String, Double> environment = new HashMap<>();
+    		String result;
+		
+    		environment.put("x", 5.);
+    		environment.put("y", 10.);
+    		environment.put("z", 20.);
+    		result = Commands.simplify("x*x*x", environment);
+		assertEquals(result, "125.0");
+		environment.clear();
+		environment.put("y", 10.);
+		result = Commands.simplify("x*x*x + y*y*y", environment);
+		assertEquals(result, "x*x*x + 1000.0");
+		environment.clear();
+		result = Commands.simplify("1+2*3+8*0.5", environment);
+		assertEquals(result, "11.0");
     }
     
 }

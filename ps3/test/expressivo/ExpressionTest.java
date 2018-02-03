@@ -32,14 +32,14 @@ public class ExpressionTest {
     		expression = Expression.parse("x + x * x * y + x");
     		assertEquals(expression.toString(),
     				"x + x*x*y + x");
+    		assertTrue(Expression.parse("x + 1").equals(Expression.parse("x + 1.00000")));
+    		assertTrue(Expression.parse("(1)+(x)").equals(Expression.parse(" 1+x")));
+    		assertTrue(Expression.parse(" 1+x").equals(Expression.parse("(1+x)")));
     }
     
     @Test(expected=ParseError.class)
     public void testExpressionParseError() {
     		Expression.parse("3xy");
     }
-    
-    
-    // TODO tests for Expression
     
 }

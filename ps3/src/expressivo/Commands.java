@@ -43,7 +43,10 @@ public class Commands {
      * @throws IllegalArgumentException if the expression is invalid
      */
     public static String simplify(String expression, Map<String,Double> environment) {
-        throw new RuntimeException("unimplemented");
+        Expression expr = Expression.parse(expression);
+        Expression simplified = expr.simplify(environment);
+        
+        return simplified.toString();
     }
     
 }

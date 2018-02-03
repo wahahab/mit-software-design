@@ -1,12 +1,14 @@
 package expressivo;
 
+import java.util.Map;
+
 public class Sum implements Expression {
 	private Expression left;
 	private Expression right;
 	
 	public Sum(Expression l, Expression r) {
-		left = l instanceof Sum ? new Group(l) : l;
-		right = r instanceof Sum ? new Group(r) : r;
+		left = l;
+		right = r;
 	}
 	
 	@Override
@@ -34,5 +36,16 @@ public class Sum implements Expression {
 	public Expression diffrentiate(String variable) {
 		return new Sum(left.diffrentiate(variable),
 				right.diffrentiate(variable));
+	}
+
+	@Override
+	public Expression simplify(Map<String, Double> environment) {
+		Expression sLeft = left.simplify(environment);
+		Expression sRight = right.simplify(environment);
+		
+		if (sLeft instanceof Value && sRight instanceof Value) {
+			return new Value(((Value) sLeft).value + ((Value) sRight).value);
+		}
+		return new Sum(sLeft, sRight);
 	}
 }
