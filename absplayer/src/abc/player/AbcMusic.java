@@ -162,7 +162,6 @@ public class AbcMusic {
 				elements = voiceElementMap.get(voice);
 				addElementsToPlayer(elements, player);
 			}
-			System.out.println(player.toString());
 		}
 		return player;
 	}

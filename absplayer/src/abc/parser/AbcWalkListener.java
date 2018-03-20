@@ -262,6 +262,10 @@ public class AbcWalkListener extends AbcBaseListener {
 		// TODO Auto-generated method stub
 		super.enterBody(ctx);
 		inBody = true;
+		// if length is omitted, give it value
+		if (music.getLength() == null) {
+			music.setLength(music.getMeter() < 0.75f ? 1 / 16f : 1 / 8f);
+		}
 	}
 	@Override
 	public void exitVoiceHeader(VoiceHeaderContext ctx) {
